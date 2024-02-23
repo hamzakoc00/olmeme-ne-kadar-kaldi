@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ömrünüzü Hesaplayın</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+        }
+
+        .system-info {
+            font-size: 14px;
+            color: #a5a5a5;
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+        }
+
+        .container {
+            text-align: center;
+            margin: 30px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            position: relative;
+        }
+
+        .gender-options {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .gender-options label {
+            margin-right: 30px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .gender-options input {
+            transform: scale(1.5);
+            margin-right: 5px;
+        }
+
+        .smoking-option {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .result {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .info-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .info-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Türkiye'de Ortalama Ölüm Yaşı</h1>
+        <p>Erkeklerde: 74 | Kadınlarda: 78</p>
+        <div class="system-info">
+            hamzakoc00/verteCalculate
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="gender-options">
+            <label>
+                <input type="radio" name="gender" value="male" id="male"> Erkek
+            </label>
+
+            <label>
+                <input type="radio" name="gender" value="female" id="female"> Kadın
+            </label>
+        </div>
+
+        <div class="smoking-option">
+            <label for="smoke">Sigara İçiyor musunuz?</label>
+            <input type="checkbox" id="smoke" name="smoke">
+        </div>
+
+        <div class="smoking-option" id="smokingYears" style="display:none;">
+            <label for="smokeYears">Kaç Yıldır Sigara İçiyorsunuz?</label>
+            <input type="number" id="smokeYears" name="smokeYears" placeholder="Yıl">
+        </div>
+
+        <label for="age" style="font-weight: bold;">Şuanki Yaşınızı Girin:</label>
+        <input type="number" id="age" placeholder="Yaşınızı girin">
+
+        <button onclick="calculateRemainingYears()">Hesapla</button>
+
+        <div id="result" class="result"></div>
+
+        <div class="info-box">
+            <p>Bu hesaplamalar, Türkiye İstatistik Kurumu'nun 18 Eylül 2023 tarihli 49726 sayılı verileri temel alınarak gerçekleştirilmektedir. İlgili yayına ulaşmak için 
+            <a href="https://data.tuik.gov.tr/Bulten/Index?p=Hayat-Tablolari-2020-2022-49726#:~:text=Genel%20olarak%20kad%C4%B1nlar%20erkeklerden%20daha,s%C3%BCresi%20fark%C4%B1%205%2C5%20y%C4%B1ld%C4%B1r.&text=%C3%87al%C4%B1%C5%9Fma%20%C3%A7a%C4%9F%C4%B1n%C4%B1n%20ba%C5%9Flang%C4%B1c%C4%B1%20olan%2015,kad%C4%B1nlarda%2066%2C2%20y%C4%B1l%20oldu." target="_blank">tıklayınız</a>.</p>
+        <br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<p><em>Bu hesaplamalar sadece tahmini bilgiler sunmaktadır ve gerçek yaşam süresini etkileyen birçok faktör bulunmaktadır. Elde edilen sonuçlar, bireysel sağlık durumu, yaşam tarzı ve diğer değişkenler dikkate alınmadan hesaplanmıştır. Sayfa, zamanın değerini hatırlatmak ve genel bir farkındalık yaratmak amacıyla hazırlanmıştır.</em></p>
+		</div>
+
+        <script>
+            function calculateRemainingYears() {
+                var currentAge = document.getElementById('age').value;
+                var isMale = document.getElementById('male').checked;
+                var isFemale = document.getElementById('female').checked;
+                var smoking = document.getElementById('smoke').checked;
+                var smokingYears = parseInt(document.getElementById('smokeYears').value) || 0;
+
+                if (!isMale && !isFemale) {
+                    alert("Lütfen cinsiyet seçin.");
+                    return;
+                }
+
+                if (currentAge === "") {
+                    alert("Lütfen yaşınızı girin.");
+                    return;
+                }
+
+                if (smoking && smokingYears === 0) {
+                    alert("Lütfen kaç yıldır sigara içtiğinizi girin.");
+                    return;
+                }
+
+                var maleLifeExpectancy;
+                var femaleLifeExpectancy;
+
+                if (currentAge <= 4) {
+                    maleLifeExpectancy = 59.3;
+                    femaleLifeExpectancy = 56.5;
+                } else if (currentAge <= 9) {
+                    maleLifeExpectancy = 55.6;
+                    femaleLifeExpectancy = 52.7;
+                } else if (currentAge <= 14) {
+                    maleLifeExpectancy = 50.8;
+                    femaleLifeExpectancy = 47.9;
+                } else if (currentAge <= 19) {
+                    maleLifeExpectancy = 45.9;
+                    femaleLifeExpectancy = 43.1;
+                } else if (currentAge <= 24) {
+                    maleLifeExpectancy = 41.3;
+                    femaleLifeExpectancy = 38.4;
+                } else if (currentAge <= 29) {
+                    maleLifeExpectancy = 36.8;
+                    femaleLifeExpectancy = 33.7;
+                } else if (currentAge <= 34) {
+                    maleLifeExpectancy = 32.4;
+                    femaleLifeExpectancy = 29.2;
+                } else if (currentAge <= 39) {
+                    maleLifeExpectancy = 28.0;
+                    femaleLifeExpectancy = 24.8;
+                } else if (currentAge <= 44) {
+                    maleLifeExpectancy = 23.7;
+                    femaleLifeExpectancy = 20.7;
+                } else if (currentAge <= 49) {
+                    maleLifeExpectancy = 19.7;
+                    femaleLifeExpectancy = 16.9;
+                } else if (currentAge <= 54) {
+                    maleLifeExpectancy = 16.0;
+                    femaleLifeExpectancy = 13.5;
+                } else if (currentAge <= 59) {
+                    maleLifeExpectancy = 12.7;
+                    femaleLifeExpectancy = 10.5;
+                } else if (currentAge <= 64) {
+                    maleLifeExpectancy = 9.7;
+                    femaleLifeExpectancy = 8.0;
+                } else if (currentAge <= 69) {
+                    maleLifeExpectancy = 7.0;
+                    femaleLifeExpectancy = 5.7;
+                } else if (currentAge <= 74) {
+                    maleLifeExpectancy = 4.8;
+                    femaleLifeExpectancy = 3.9;
+                } else if (currentAge <= 79) {
+                    maleLifeExpectancy = 3.1;
+                    femaleLifeExpectancy = 2.5;
+                } else if (currentAge <= 84) {
+                    maleLifeExpectancy = 1.9;
+                    femaleLifeExpectancy = 1.6;
+                } else {
+                    maleLifeExpectancy = 1.4;
+                    femaleLifeExpectancy = 1.0;
+                }
+
+                if (smoking) {
+                    maleLifeExpectancy -= smokingYears / 4;
+                    femaleLifeExpectancy -= smokingYears / 4;
+                }
+
+                var remainingYears;
+
+                if (isMale) {
+                    remainingYears = Math.round(maleLifeExpectancy+10);
+                } else if (isFemale) {
+                    remainingYears = Math.round(femaleLifeExpectancy+10);
+                }
+
+                var result = document.getElementById('result');
+                
+                if (remainingYears > 0) {
+                    result.innerHTML = "Ölmek için yaklaşık " + remainingYears + " yılınız kaldı.";
+                } else {
+                    result.innerHTML = "Üzgünüz, girdiğiniz yaş Türkiye'deki ortalama ölüm yaşı altında. Daha uzun bir yaşam süresi bekleniyor.";
+                }
+            }
+
+            // Sigara içiliyorsa sigara içme yılları kutusunu göster
+            document.getElementById('smoke').addEventListener('change', function() {
+                var smokingYearsDiv = document.getElementById('smokingYears');
+                smokingYearsDiv.style.display = this.checked ? 'block' : 'none';
+            });
+        </script>
+    </div>
+</body>
+</html>
